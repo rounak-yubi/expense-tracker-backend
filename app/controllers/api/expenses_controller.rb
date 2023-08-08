@@ -9,6 +9,11 @@ class Api::ExpensesController < ApplicationController
     end
   end
 
+  def index_by_user
+    user_expenses = Expense.where(employee_id: params[:user_id])
+    render json: { expenses: user_expenses }, status: :ok
+  end
+  
   private
 
   def expense_params
