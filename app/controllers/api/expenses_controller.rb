@@ -6,7 +6,6 @@ class Api::ExpensesController < ApplicationController
       invoice_result = create_invoice(expense_params[:invoice_number])
       if invoice_result[:success]
         expense_approval = ExpenseApproval.find_or_initialize_by(expense_id: result[:expense].id)
-        puts "Expense Prtg: #{invoice_result[:response]['status']}"
         expense_approval.status = if invoice_result[:response]['status']
                                     'approved'
                                   else
@@ -27,7 +26,7 @@ class Api::ExpensesController < ApplicationController
     end
   end
 
-  def index_by_user
+  def user_expenses
     user_expenses = Expense.where(employee_id: params[:user_id])
     render json: { expenses: user_expenses }, status: :ok
   end

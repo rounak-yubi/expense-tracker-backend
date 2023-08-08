@@ -20,6 +20,15 @@ class Api::ExpenseApprovalsController < ApplicationController
     end
   end
 
+  def get_expense_detail
+    expense_approval = ExpenseApproval.find_by(expense_id: params[:expense_id])
+    if expense_approval
+      render json: { expense_approval: expense_approval }, status: :ok
+    else
+      render json: { message: 'Expense approval not found' }, status: :not_found
+    end
+  end
+
   private
 
   def expense_approval_params
