@@ -1,11 +1,12 @@
 class Api::ExpensesController < ApplicationController
   def create
-    expense = Expense.new(expense_params)
+    service = ExpenseService.new(expense_params)
+    result = service.create
 
-    if expense.save
-      render json: { message: 'Expense added successfully!', expense: expense }, status: :created
+    if result[:success]
+      render json: { message: 'Expense added successfully!', expense: result[:expense] }, status: :created
     else
-      render json: { errors: expense.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: result[:errors] }, status: :unprocessable_entity
     end
   end
 
@@ -13,7 +14,7 @@ class Api::ExpensesController < ApplicationController
     user_expenses = Expense.where(employee_id: params[:user_id])
     render json: { expenses: user_expenses }, status: :ok
   end
-  
+
   private
 
   def expense_params
