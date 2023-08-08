@@ -1,17 +1,14 @@
 class Api::EmployeesController < ApplicationController
+  include EmployeeParamsUtils
+
   def create
-    employee = Employee.new(employee_params)
+    service = EmployeeService.new(employee_params)
+    result = service.create_employee
 
-    if employee.save
-      render json: { message: 'Employee onboarding successful!', employee: employee }, status: :created
+    if result[:success]
+      render json: { message: 'Employee onboarding successful!', employee: result[:employee] }, status: :created
     else
-      render json: { errors: employee.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: result[:errors] }, status: :unprocessable_entity
     end
-  end
-
-  private
-
-  def employee_params
-    params.require(:employee).permit(:name, :department, :employment_status)
   end
 end
